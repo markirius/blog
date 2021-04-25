@@ -7,7 +7,7 @@ app_name = "blog"
 
 urlpatterns = [
     path("", PostList.as_view(), name="post_list"),
-    path("<int:pk>",
+    path("<slug:slug>",
          PostDetail.as_view(),
          name="post_detail"),
 ]

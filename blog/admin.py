@@ -12,3 +12,13 @@ class PostAdmin(admin.ModelAdmin):
     raw_id_fields = ("author",)
     date_hierarchy = "publish"
     ordering = ("status", "publish")
+    fieldsets = ((
+        None, {
+            "fields": ("title", "slug", "body", "publish", "status")
+        }),
+    )
+
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        obj.save()
