@@ -1,10 +1,10 @@
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
-from mysite.settings import EMAIL_HOST_USER
 
-from blog.forms import EmailPostForm
-from blog.models import Post
+from blog.forms import CommentForm, EmailPostForm
+from blog.models import Comment, Post
+from mysite.settings import EMAIL_HOST_USER
 
 
 class PostList(ListView):
@@ -38,3 +38,17 @@ class PostDetail(DetailView):
         return render(request,
                       "blog/share.html",
                       {"post": post, "form": form, "sent": sent})
+
+    def post_comment(request, year, month, day, post):
+        post = get_object_or_404(Post,
+                                 slug=post,
+                                 status="published",
+                                 publish__year=year,
+                                 publish__month=month,
+                                 publish__day=day)
+
+        comments = post.comments.filter(active=True)
+
+        new_comment = None
+
+        # Note: 78
