@@ -10,6 +10,12 @@ class PublishedManager(models.Manager):
                      self).get_queryset().filter(status="published")
 
 
+class ActivedManager(models.Manager):
+    def get_queryset(self):
+        return super(ActivedManager,
+                     self).get_queryset().filter(active=True)
+
+
 class Post(models.Model):
     STATUS_CHOICES = (
         ("draft", "Draft"),
@@ -56,6 +62,9 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    actived = ActivedManager()
 
     class Meta:
         ordering = ("created",)
