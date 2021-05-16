@@ -1,9 +1,10 @@
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
 from blog.forms import CommentForm, EmailPostForm
-from blog.models import Comment, Post
+from blog.models import Post
 from mysite.settings import EMAIL_HOST_USER
 
 
@@ -40,28 +41,18 @@ class PostDetail(DetailView):
                       "blog/share.html",
                       {"post": post, "form": form, "sent": sent})
 
-    def post_comment(request, year, month, day, post):
-        post = get_object_or_404(Post,
-                                 slug=post,
-                                 status="published",
-                                 publish__year=year,
-                                 publish__month=month,
-                                 publish__day=day)
-
-        comments = post.comments.filter(active=True)
-
+    def post_comment(request, slug):
+        post = get_object_or_404(Post, slug=slug, status="published")
         new_comment = None
-
-        if request.method == "Post":
-            comment_form = CommentForm(data=request.POST)
-            if comment_form.is_valid():
-                new_comment = comment_form.save(commit=False)
-                new_comment.post - post
+        if request.method == "POST":
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                new_comment = form.save(commit=False)
+                new_comment.post = post
                 new_comment.save()
         else:
-            comment_form = CommentForm()
+            form = CommentForm()
         return render(request,
-                      "post_detail.html",
-                      {"comments": comments,
-                       "new_comment": new_comment,
-                       "comment_form": comment_form})
+                      "blog/comment.html",
+                      {"post": post,
+                       "form": form})  # TODO: fix form don't appear on html template

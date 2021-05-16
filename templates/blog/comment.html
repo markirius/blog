@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %}
+
+{% block title %}
+Add a new comment
+{% endblock %}
+
+{% block body %}
+  {% if new_comment %}
+    <h2>Your comment has been added.</h2>
+    <a href="#">back to post</a>
+  {% else %}
+  <form method="POST">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Add comment"></p>
+  </form>
+  {% endif %}
+{% endblock %}
