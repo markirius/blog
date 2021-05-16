@@ -14,7 +14,7 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ("status", "publish")
     fieldsets = ((
         None, {
-            "fields": ("title", "slug", "body", "publish", "status")
+            "fields": ("title", "slug", "body", "publish", "status", "tags")
         }),
     )
 

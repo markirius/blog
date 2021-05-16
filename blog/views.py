@@ -14,6 +14,9 @@ class PostList(ListView):
     context_object_name = "posts"
     template_name = "blog/post_list.html"
 
+    def post_taglist(request, tag_slug=None):
+        pass
+
 
 class PostDetail(DetailView):
     model = Post

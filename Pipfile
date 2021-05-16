@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django = "~=3.2"
 python-decouple = "~=3.4"
+django-taggit = "~=1.4.0"
 
 [dev-packages]
 django-extensions = "~=3.1.3"
