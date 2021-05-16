@@ -7,7 +7,7 @@ Add a new comment
 {% block body %}
   {% if new_comment %}
     <h2>Your comment has been added.</h2>
-    <a href="#">back to post</a>
+    <a href="{% url 'blog:post_detail' post.slug %}">back to post</a>
   {% else %}
   <form method="POST">
     {{ form.as_p }}

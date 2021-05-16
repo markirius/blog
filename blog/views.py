@@ -1,6 +1,5 @@
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
 from blog.forms import CommentForm, EmailPostForm
@@ -55,4 +54,6 @@ class PostDetail(DetailView):
         return render(request,
                       "blog/comment.html",
                       {"post": post,
-                       "form": form})  # TODO: fix form don't appear on html template
+                       "new_comment": new_comment,
+                       "form": form})
+        # TODO: fix form don't appear on html template
