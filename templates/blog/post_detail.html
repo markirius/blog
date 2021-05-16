@@ -20,7 +20,7 @@
   {{ total_comments }} comment {{ total_comments|pluralize }}
 </h2>
 {% endwith %}
-{% for comment in posts.comments.filter(active=True) %}
+{% for comment in post.comments.all %}
 <div class="comment">
   <p class="info">
     Comment {{ forloop.counter }} by {{ comment.name }}
@@ -31,4 +31,14 @@
 {% empty %}
 <p>There are no comments yet.</p>
 {% endfor %}
+{% if new_comment %}
+  <h2>Your comment has been added.</h2>
+{% else %}
+  <h2></h2>
+  <form action="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <p><input type="submit" value="Add comment"></p>
+  </form>
+{% endif %}
 {% endblock %}

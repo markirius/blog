@@ -9,6 +9,7 @@ from mysite.settings import EMAIL_HOST_USER
 
 class PostList(ListView):
     model = Post
+    queryset = Post.published.all()
     paginate_by = 3
     context_object_name = "posts"
     template_name = "blog/post_list.html"
@@ -51,4 +52,16 @@ class PostDetail(DetailView):
 
         new_comment = None
 
-        # Note: 78
+        if request.method == "Post":
+            comment_form = CommentForm(data=request.POST)
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.post - post
+                new_comment.save()
+        else:
+            comment_form = CommentForm()
+        return render(request,
+                      "post_detail.html",
+                      {"comments": comments,
+                       "new_comment": new_comment,
+                       "comment_form": comment_form})
