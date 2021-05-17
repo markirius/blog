@@ -1,5 +1,6 @@
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from taggit.models import Tag
@@ -77,8 +78,23 @@ class PostDetail(DetailView):
                 new_comment.save()
         else:
             form = CommentForm()
+
         return render(request,
                       "blog/comment.html",
                       {"post": post,
                        "new_comment": new_comment,
                        "form": form})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "slug" in self.kwargs:
+            slug = self.kwargs["slug"]
+            post = get_object_or_404(Post, slug=slug, status="published")
+            post_tags_ids = post.tags.values_list("id", flat=True)
+            similar_posts = Post.published.filter(tags__in=post_tags_ids)\
+                                          .exclude(slug=slug)
+            similar_posts = similar_posts.annotate(same_tags=Count("tags"))\
+                                         .order_by("-same_tags",
+                                                   "-publish")[:4]
+            context["similar_posts"] = similar_posts
+        return context
