@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
+from taggit.models import Tag
 
 from blog.forms import CommentForm, EmailPostForm
 from blog.models import Post
@@ -15,7 +17,28 @@ class PostList(ListView):
     template_name = "blog/post_list.html"
 
     def post_taglist(request, tag_slug=None):
-        pass
+        object_list = Post.published.all()
+        tag = None
+
+        if tag_slug:
+            tag = get_object_or_404(Tag, slug=tag_slug)
+            object_list = object_list.filter(tags__in=[tag])
+
+        paginator = Paginator(object_list, 3)
+        page = request.GET.get("page")
+
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+
+        return render(request,
+                      "blog/post_list.html",
+                      {"page": page,
+                       "posts": posts,
+                       "tag": tag})
 
 
 class PostDetail(DetailView):
@@ -23,8 +46,8 @@ class PostDetail(DetailView):
     context_object_name = "post"
     template_name = "blog/post_detail.html"
 
-    def post_share(request, post_id):
-        post = get_object_or_404(Post, id=post_id, status="published")
+    def post_share(request, slug):
+        post = get_object_or_404(Post, slug=slug, status="published")
         sent = False
         if request.method == "POST":
             form = EmailPostForm(request.POST)
@@ -59,4 +82,3 @@ class PostDetail(DetailView):
                       {"post": post,
                        "new_comment": new_comment,
                        "form": form})
-        # TODO: fix form don't appear on html template

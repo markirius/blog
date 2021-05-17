@@ -6,6 +6,9 @@ Blog
 
 {% block body %}
 <h1>Blog</h1>
+{% if tag %}
+  <h2>Posts tagged with "{{ tag.name }}"</h2>
+{% endif %}
 {% for post in posts %}
 <h2>
   <a href="{% url 'blog:post_detail' post.slug %}">
@@ -15,7 +18,7 @@ Blog
 <p class="tags">
   Tags:
   {% for tag in post.tags.all %}
-    <a href="#">
+    <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
       {{ tag.name }}
     </a>
     {% if not forloop.last %}
@@ -27,5 +30,5 @@ Blog
 </p>
 {{ post.body |truncatewords:30|linebreaks }}
 {% endfor %}
-{% include "pagination.html" with page=page_obj %}
+{% include "pagination.html" with page=posts %}
 {% endblock %}
