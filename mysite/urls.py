@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
+from blog.feeds import LatestPostFeed
 from blog.sitemaps import PostSitemap
 
 sitemaps = {
@@ -28,4 +29,5 @@ urlpatterns = [
     path("", include("blog.urls", namespace="blog")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps},
          name="django.contrib.sitemaps.views.sitemap"),
+    path("feed/", LatestPostFeed(), name="post_feed"),
 ]

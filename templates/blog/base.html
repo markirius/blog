@@ -23,6 +23,7 @@
     </h2>
     <p>This is a blog.</p>
     <p>There are {% total_posts %} posts so far.</p>
+    <p><a href="{% url "post_feed" %}">Subscribe to my RSS feed</a></p>
     <h3>Latest Posts</h3>
     {% show_latest_posts %}
     <h3>Most Commented Posts</h3>
