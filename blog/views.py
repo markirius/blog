@@ -1,11 +1,11 @@
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from taggit.models import Tag
 
-from blog.forms import CommentForm, EmailPostForm
+from blog.forms import CommentForm, EmailPostForm, SearchForm
 from blog.models import Post
 from mysite.settings import EMAIL_HOST_USER
 
@@ -98,3 +98,13 @@ class PostDetail(DetailView):
                                                    "-publish")[:4]
             context["similar_posts"] = similar_posts
         return context
+
+    def post_search(request):  # TODO: complete search feature
+        form = SearchForm()
+        query = None
+        results = []
+        if "query" in request.GET:
+            query = form.cleaned_data["query"]
+            results = Post.published.annotate(
+                search=Q(question_startswith=query)
+            )
