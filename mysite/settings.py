@@ -29,6 +29,8 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1", cast=Csv())
 
+SITE_ID = 1
+
 
 # Application definition
 
@@ -39,8 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # sitemap
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
     # third party
-    'taggit',
+    "taggit",
     # project apps
     "blog.apps.BlogConfig",
 ]

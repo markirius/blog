@@ -1,5 +1,7 @@
 from django import template
 from django.db.models import Count
+from django.utils.safestring import mark_safe
+from markdown import markdown
 
 from blog.models import Post
 
@@ -23,3 +25,8 @@ def show_most_commented_posts(count=5):
                     total_comments=Count("comments")
                 ).order_by("-total_comments")[:count]
     return {"most_commented_posts": most_commented_posts}
+
+
+@register.filter(name="markdown")
+def markdown_format(text):
+    return mark_safe(markdown(text))
