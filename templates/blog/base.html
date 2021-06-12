@@ -16,11 +16,6 @@
     {% endblock %}
   </div>
   <div id="sidebar">
-    <div>
-      <form action="{% url 'blog:post_search' %}" method="get">
-        <input name="query" type="text" placeholder="Search...">
-      </form>
-    </div>
     <h2>
       <a href="{% url 'blog:post_list' %}">
         Blog
@@ -33,6 +28,10 @@
     {% show_latest_posts %}
     <h3>Most Commented Posts</h3>
     {% show_most_commented_posts %}
+    <h3>Search a post</h3>
+    <form action="{% url 'blog:post_list' %}" method="get">
+      <input name="query" type="text" placeholder="Search...">
+    </form>
   </div>
 </body>
 </html>

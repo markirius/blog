@@ -18,7 +18,15 @@ class PostList(ListView):
     template_name = "blog/post_list.html"
 
     def post_taglist(request, tag_slug=None):
-        object_list = Post.published.all()
+        query = request.GET.get("query")
+        if query:
+            object_list = Post.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(body__icontains=query)
+            ).order_by("title")
+        else:
+            object_list = Post.published.all()
+
         tag = None
 
         if tag_slug:
@@ -40,29 +48,6 @@ class PostList(ListView):
                       {"page": page,
                        "posts": posts,
                        "tag": tag})
-
-    def post_search(request):
-        query = request.GET.get("query")
-        if query:
-            object_list = Post.objects.filter(
-                    Q(title__icontains=query) |
-                    Q(body__icontains=query)
-            ).order_by("title")
-
-            paginator = Paginator(object_list, 3)
-            page = request.GET.get("page")
-
-            try:
-                posts = paginator.page(page)
-            except PageNotAnInteger:
-                posts = paginator.page(1)
-            except EmptyPage:
-                posts = paginator.page(paginator.num_pages)
-
-            return render(request,
-                          "blog/post_list.html",
-                          {"page": page,
-                           "posts": posts})
 
 
 class PostDetail(DetailView):

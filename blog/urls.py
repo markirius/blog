@@ -6,7 +6,6 @@ app_name = "blog"
 
 
 urlpatterns = [
-    # path("", PostList.as_view(), name="post_list"),
     path("", PostList.post_taglist, name="post_list"),
     path("tag/<slug:tag_slug>/",
          PostList.post_taglist,
@@ -16,5 +15,4 @@ urlpatterns = [
     path("<slug:slug>/comment/",
          PostDetail.post_comment,
          name="post_comment"),
-    path("search/", PostList.post_search, name="post_search"),
 ]
