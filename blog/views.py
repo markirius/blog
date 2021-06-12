@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from taggit.models import Tag
 
-from blog.forms import CommentForm, EmailPostForm, SearchForm
+from blog.forms import CommentForm, EmailPostForm
 from blog.models import Post
 from mysite.settings import EMAIL_HOST_USER
 
@@ -40,6 +40,29 @@ class PostList(ListView):
                       {"page": page,
                        "posts": posts,
                        "tag": tag})
+
+    def post_search(request):
+        query = request.GET.get("query")
+        if query:
+            object_list = Post.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(body__icontains=query)
+            ).order_by("title")
+
+            paginator = Paginator(object_list, 3)
+            page = request.GET.get("page")
+
+            try:
+                posts = paginator.page(page)
+            except PageNotAnInteger:
+                posts = paginator.page(1)
+            except EmptyPage:
+                posts = paginator.page(paginator.num_pages)
+
+            return render(request,
+                          "blog/post_list.html",
+                          {"page": page,
+                           "posts": posts})
 
 
 class PostDetail(DetailView):
@@ -98,13 +121,3 @@ class PostDetail(DetailView):
                                                    "-publish")[:4]
             context["similar_posts"] = similar_posts
         return context
-
-    def post_search(request):  # TODO: complete search feature
-        form = SearchForm()
-        query = None
-        results = []
-        if "query" in request.GET:
-            query = form.cleaned_data["query"]
-            results = Post.published.annotate(
-                search=Q(question_startswith=query)
-            )
