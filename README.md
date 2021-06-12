@@ -10,12 +10,14 @@ features:
 - Python decouple
 
 
-*generate .env file with:
-```python contrib/make_env.py```
+* generate .env file with:
+```python contrib/make_env.py
+```
 
-*work with postgres or sqlite
+* work with postgres or sqlite
 
-*.env file
+
+* .env file
 |VAR|VALUE|TYPE|
 |---|-----|----|
 |SECRET_KEY|examplejbb+VirRuW3uYi6wFVe1w39OBmL3xb3Q=example|STRING
