@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 
 from decouple import Csv, config
+from dj_database_url import parse as db_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,10 +92,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': config(
+        "DATABASE_URL",
+        default=f"sqlite:///{BASE_DIR}/db.sqlite3",
+        cast=db_url,
+    )
 }
 
 
@@ -120,15 +122,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = config("LANGUAGE_CODE", default="en-us")
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = config("TIME_ZONE", default="UTC")
 
-USE_I18N = True
+USE_I18N = config("USE_I18N", default=True, cast=bool)
 
-USE_L10N = True
+USE_L10N = config("USE_L10N", default=True, cast=bool)
 
-USE_TZ = True
+USE_TZ = config("USE_TZ", default=True, cast=bool)
 
 
 # Static files (CSS, JavaScript, Images)
