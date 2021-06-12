@@ -11,13 +11,13 @@ features:
 
 
 * generate .env file with:
-```python contrib/make_env.py
-```
+`python contrib/make_env.py`
 
 * work with postgres or sqlite
 
 
 * .env file
+
 |VAR|VALUE|TYPE|
 |---|-----|----|
 |SECRET_KEY|examplejbb+VirRuW3uYi6wFVe1w39OBmL3xb3Q=example|STRING
